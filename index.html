@@ -4,23 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>你是哪一種職場韌力角色？</title>
+
   <style>
     :root {
-      --bg1: #fff7ec;
-      --bg2: #e8f6f3;
+      --bg1: #fff9f0;
+      --bg2: #eef8f8;
       --main: #2f7f8f;
       --main-dark: #245f6d;
       --accent: #f2a65a;
       --text: #443832;
-      --muted: #76685f;
-      --card: rgba(255, 255, 255, 0.92);
-      --shadow: 0 12px 34px rgba(71, 68, 61, 0.16);
-      --radius: 26px;
+      --muted: #74665d;
+      --card: rgba(255,255,255,.94);
+      --shadow: 0 12px 34px rgba(71, 68, 61, 0.15);
+      --radius: 24px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -28,15 +27,15 @@
       color: var(--text);
       background:
         radial-gradient(circle at top left, #fff0cf 0, transparent 34%),
-        radial-gradient(circle at top right, #cbeee8 0, transparent 32%),
+        radial-gradient(circle at top right, #d8f1ee 0, transparent 32%),
         linear-gradient(135deg, var(--bg1), var(--bg2));
       min-height: 100vh;
       line-height: 1.75;
     }
 
     .wrap {
-      width: min(920px, calc(100% - 28px));
-      margin: 28px auto;
+      width: min(960px, calc(100% - 28px));
+      margin: 28px auto 40px;
     }
 
     .hero {
@@ -45,7 +44,6 @@
       padding: 34px 28px;
       box-shadow: var(--shadow);
       text-align: center;
-      border: 1px solid rgba(255,255,255,.7);
       position: relative;
       overflow: hidden;
     }
@@ -53,11 +51,12 @@
     .hero::before {
       content: "";
       position: absolute;
-      inset: auto -90px -120px auto;
-      width: 260px;
-      height: 260px;
-      border-radius: 999px;
-      background: rgba(242, 166, 90, .20);
+      right: -80px;
+      bottom: -100px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: rgba(242,166,90,.18);
     }
 
     .badge {
@@ -68,7 +67,7 @@
       color: var(--main-dark);
       border-radius: 999px;
       padding: 6px 14px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       margin-bottom: 12px;
     }
@@ -77,26 +76,25 @@
       margin: 0;
       font-size: clamp(30px, 5vw, 48px);
       color: var(--main);
-      letter-spacing: .03em;
       line-height: 1.25;
     }
 
     .subtitle {
       margin: 12px auto 0;
-      font-size: clamp(17px, 2.6vw, 22px);
+      max-width: 760px;
       color: var(--muted);
-      max-width: 720px;
+      font-size: clamp(17px, 2.6vw, 22px);
     }
 
     .intro {
-      margin: 20px auto 0;
-      max-width: 720px;
+      margin: 18px auto 0;
+      max-width: 760px;
       background: #fffaf3;
       border-left: 6px solid var(--accent);
       text-align: left;
       padding: 14px 16px;
       border-radius: 16px;
-      color: #65584f;
+      color: #64574f;
     }
 
     .quiz {
@@ -106,15 +104,14 @@
     .question {
       background: var(--card);
       border-radius: 22px;
-      box-shadow: 0 8px 24px rgba(71, 68, 61, 0.10);
+      box-shadow: 0 8px 24px rgba(71,68,61,.10);
       padding: 22px;
       margin: 18px 0;
-      border: 1px solid rgba(255,255,255,.75);
     }
 
     .q-title {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: flex-start;
       font-size: 20px;
       font-weight: 800;
@@ -125,7 +122,7 @@
     .q-num {
       flex: 0 0 auto;
       background: var(--main);
-      color: white;
+      color: #fff;
       border-radius: 12px;
       width: 42px;
       height: 42px;
@@ -146,7 +143,7 @@
     }
 
     .option:hover {
-      border-color: rgba(47, 127, 143, .35);
+      border-color: rgba(47,127,143,.35);
       transform: translateY(-1px);
     }
 
@@ -155,17 +152,17 @@
       transform: scale(1.12);
     }
 
-    .option:has(input:checked) {
+    .option.selected {
       background: #e8f6f3;
       border-color: var(--main);
-      box-shadow: 0 5px 14px rgba(47, 127, 143, .12);
+      box-shadow: 0 5px 14px rgba(47,127,143,.12);
     }
 
     .actions {
       display: flex;
       gap: 12px;
-      margin: 24px 0;
       flex-wrap: wrap;
+      margin: 24px 0;
     }
 
     button {
@@ -173,10 +170,15 @@
       border-radius: 16px;
       padding: 14px 18px;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       font-family: inherit;
       transition: .18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
     }
 
     .primary {
@@ -184,18 +186,13 @@
       min-width: 220px;
       background: var(--accent);
       color: #fff;
-      box-shadow: 0 8px 18px rgba(242, 166, 90, .28);
+      box-shadow: 0 8px 18px rgba(242,166,90,.28);
     }
 
     .secondary {
-      background: #ffffff;
+      background: #fff;
       color: var(--main-dark);
       border: 2px solid #cae7e3;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.02);
     }
 
     .result {
@@ -204,8 +201,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 28px;
-      margin: 22px 0 40px;
-      border: 1px solid rgba(255,255,255,.75);
+      margin-top: 24px;
     }
 
     .result h2 {
@@ -217,17 +213,17 @@
 
     .complete-text {
       background: #fff7ec;
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 20px;
       border-left: 6px solid var(--accent);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 20px;
     }
 
     .score-table {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin: 18px 0;
+      margin: 18px 0 20px;
     }
 
     .score-cell {
@@ -244,8 +240,8 @@
       border-radius: 24px;
       padding: 22px;
       background: linear-gradient(135deg, #ffffff, #f8fffd);
-      border: 2px solid rgba(47, 127, 143, .16);
-      box-shadow: 0 8px 22px rgba(71, 68, 61, .10);
+      border: 2px solid rgba(47,127,143,.16);
+      box-shadow: 0 8px 22px rgba(71,68,61,.10);
     }
 
     .role-top {
@@ -261,7 +257,7 @@
       border-radius: 20px;
       display: grid;
       place-items: center;
-      font-size: 36px;
+      font-size: 34px;
       background: #e8f6f3;
     }
 
@@ -300,6 +296,220 @@
       text-align: center;
     }
 
+    .share-panel {
+      margin-top: 28px;
+      padding: 20px;
+      border-radius: 22px;
+      background: #f8fcfb;
+      border: 2px dashed #cde5df;
+    }
+
+    .share-panel h3 {
+      margin: 0 0 8px;
+      color: var(--main-dark);
+      font-size: 24px;
+    }
+
+    .share-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .share-btn {
+      background: var(--main);
+      color: #fff;
+    }
+
+    .share-btn.secondary {
+      background: #fff;
+      color: var(--main-dark);
+      border: 2px solid #cae7e3;
+    }
+
+    .share-preview-wrap {
+      margin-top: 18px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    /* 分享圖卡 */
+    .share-card {
+      width: 820px;
+      min-height: 430px;
+      border-radius: 32px;
+      padding: 28px;
+      background: linear-gradient(135deg, #fffaf3 0%, #eef8f8 100%);
+      color: #3f3a34;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(60, 63, 60, .12);
+    }
+
+    .share-card::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      right: -90px;
+      top: -90px;
+      background: rgba(255,255,255,.28);
+    }
+
+    .share-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      left: -90px;
+      bottom: -110px;
+      background: rgba(255,255,255,.22);
+    }
+
+    .share-card-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1.35fr .85fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .share-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .share-top-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .share-title {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .share-subtitle {
+      font-size: 16px;
+      color: #655b53;
+      margin-bottom: 16px;
+    }
+
+    .share-role-box {
+      background: rgba(255,255,255,.82);
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(2px);
+    }
+
+    .share-role-line {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .share-role-name {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .share-role-desc {
+      font-size: 16px;
+      color: #5d544d;
+      line-height: 1.7;
+    }
+
+    .share-reminder-box {
+      background: rgba(255,255,255,.72);
+      border-radius: 22px;
+      padding: 16px;
+      margin-top: auto;
+    }
+
+    .share-reminder-label {
+      font-size: 14px;
+      font-weight: 800;
+      opacity: .85;
+      margin-bottom: 6px;
+    }
+
+    .share-reminder-text {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .share-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,.68);
+      border-radius: 26px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .share-emoji {
+      font-size: 58px;
+      line-height: 1;
+      margin-top: 6px;
+    }
+
+    .share-tagline {
+      font-size: 15px;
+      font-weight: 800;
+      color: #5f554d;
+      line-height: 1.7;
+    }
+
+    .qr-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
+    }
+
+    #qrcode {
+      width: 140px;
+      height: 140px;
+      margin: auto;
+    }
+
+    #qrcode img,
+    #qrcode canvas {
+      display: block;
+      margin: auto;
+    }
+
+    .qr-caption {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #4e4a46;
+    }
+
+    .share-footer {
+      font-size: 12px;
+      color: #6d645d;
+      line-height: 1.6;
+    }
+
     .notice {
       margin-top: 18px;
       font-size: 14px;
@@ -313,7 +523,14 @@
       text-align: center;
       color: #756960;
       font-size: 14px;
-      margin: 28px 0 8px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 860px) {
+      .share-card {
+        width: 100%;
+        min-width: 760px;
+      }
     }
 
     @media (max-width: 640px) {
@@ -332,10 +549,13 @@
       .role-top {
         align-items: flex-start;
       }
+
+      .share-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
-
 <body>
   <main class="wrap">
     <section class="hero">
@@ -361,7 +581,13 @@
     </div>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+
   <script>
+    // 請改成你的實際測驗網址
+    const QUIZ_URL = "https://你的網址.pages.dev/?utm_source=sharecard";
+
     const questions = [
       {
         title: "當臨時被交辦一件急件時，你通常會？",
@@ -417,6 +643,7 @@
 
     const roles = {
       A: {
+        key: "A",
         emoji: "⚓",
         name: "港灣型",
         youAre: "讓人安心的穩定力量",
@@ -424,9 +651,12 @@
         source: "穩定、包容、沉著、陪伴。",
         pressure: "你常常接住別人的情緒，卻忘了自己也需要被接住。",
         reminder: "我可以照顧別人，也可以先照顧自己。",
-        action: "當同仁遇到困難時，先給予傾聽與陪伴；但也記得尊重自己的界線，不把所有責任都扛在身上。"
+        action: "當同仁遇到困難時，先給予傾聽與陪伴；但也記得尊重自己的界線，不把所有責任都扛在身上。",
+        bg: "linear-gradient(135deg, #fff5ea 0%, #e8f7f5 100%)",
+        accent: "#d8a25f"
       },
       B: {
+        key: "B",
         emoji: "🗼",
         name: "燈塔型",
         youAre: "在困難中找方向的人",
@@ -434,9 +664,12 @@
         source: "清楚、理性、目標感、行動力。",
         pressure: "你可能會習慣把「解決問題」放在第一位，忽略自己的疲累與情緒。",
         reminder: "不是每件事都要立刻解決，我也可以先休息一下。",
-        action: "在協助同仁找方法前，先問一句：「你現在比較需要我聽你說，還是一起想辦法？」"
+        action: "在協助同仁找方法前，先問一句：「你現在比較需要我聽你說，還是一起想辦法？」",
+        bg: "linear-gradient(135deg, #fff7ec 0%, #eef7ff 100%)",
+        accent: "#6e8fb4"
       },
       C: {
+        key: "C",
         emoji: "🍃",
         name: "海風型",
         youAre: "懂得轉彎與調節的彈性力量",
@@ -444,9 +677,12 @@
         source: "彈性、轉換、幽默感、適應力。",
         pressure: "你可能看起來很輕鬆，但有時只是把壓力先放到一旁，沒有真正處理。",
         reminder: "換個呼吸不是逃避，是讓自己重新有力量。",
-        action: "在忙碌或緊繃時，主動創造一點喘息空間，例如提醒同仁休息、喝水、伸展，讓團隊不只追求效率，也保有修復。"
+        action: "在忙碌或緊繃時，主動創造一點喘息空間，例如提醒同仁休息、喝水、伸展，讓團隊不只追求效率，也保有修復。",
+        bg: "linear-gradient(135deg, #f4fff8 0%, #eef9ff 100%)",
+        accent: "#71ae8a"
       },
       D: {
+        key: "D",
         emoji: "🪸",
         name: "珊瑚型",
         youAre: "讓支持網慢慢長出來的人",
@@ -454,9 +690,12 @@
         source: "連結、合作、同理、互助。",
         pressure: "你在乎別人的感受，有時會過度顧慮他人，反而壓抑自己的需求。",
         reminder: "我可以支持別人，也可以把自己的需要說出來。",
-        action: "尊重每個人不同的工作節奏、家庭照顧責任、身心狀態與表達方式，讓職場成為可以安心說出需求的地方。"
+        action: "尊重每個人不同的工作節奏、家庭照顧責任、身心狀態與表達方式，讓職場成為可以安心說出需求的地方。",
+        bg: "linear-gradient(135deg, #fff4f1 0%, #eefaf7 100%)",
+        accent: "#d67b78"
       },
       E: {
+        key: "E",
         emoji: "🌊",
         name: "浪花型",
         youAre: "敏銳感受與自我覺察的力量",
@@ -464,9 +703,13 @@
         source: "覺察、感受、溫柔、理解。",
         pressure: "你可能容易受環境影響，或把別人的情緒放進心裡，讓自己變得疲累。",
         reminder: "我的感受不是脆弱，而是提醒我需要好好照顧自己。",
-        action: "不隨意評論他人的情緒、外貌、身心狀態或性別氣質；在回應同仁前，先多一點理解、少一點標籤。"
+        action: "不隨意評論他人的情緒、外貌、身心狀態或性別氣質；在回應同仁前，先多一點理解、少一點標籤。",
+        bg: "linear-gradient(135deg, #eefaff 0%, #f7f5ff 100%)",
+        accent: "#6da3cb"
       }
     };
+
+    let lastResultData = null;
 
     function renderQuiz() {
       const quiz = document.getElementById("quiz");
@@ -474,7 +717,7 @@
         const optionHtml = Object.entries(q.options).map(([key, text]) => {
           return `
             <label class="option">
-              <input type="radio" name="q${index}" value="${key}">
+              <input type="radio" name="q${index}" value="${key}" onchange="markSelected(this)">
               <strong>${key}.</strong> ${text}
             </label>
           `;
@@ -490,6 +733,12 @@
           </article>
         `;
       }).join("");
+    }
+
+    function markSelected(input) {
+      const labels = document.querySelectorAll(`input[name="${input.name}"]`);
+      labels.forEach(el => el.closest('.option').classList.remove('selected'));
+      input.closest('.option').classList.add('selected');
     }
 
     function roleCard(key) {
@@ -532,6 +781,100 @@
       `;
     }
 
+    function shareCardHTML(data) {
+      const { isTie, winners, role, titleText, descText, reminderText, bgStyle, accent } = data;
+
+      const winnerBadges = winners.map(k => {
+        const w = roles[k];
+        return `<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);padding:6px 10px;border-radius:999px;font-size:14px;font-weight:800;margin:4px 4px 0 0;">${w.emoji} ${w.name}</span>`;
+      }).join("");
+
+      return `
+        <div id="shareCard" class="share-card" style="background:${bgStyle};">
+          <div class="share-card-inner">
+            <div class="share-left">
+              <div class="share-top-badge">暖洋心理韌性檢測站</div>
+              <div class="share-title">你是哪一種職場韌力角色？</div>
+              <div class="share-subtitle">面對壓力時，你最常用哪種方式讓自己重新站穩？</div>
+
+              <div class="share-role-box" style="box-shadow: inset 0 0 0 2px ${accent}22;">
+                <div class="share-role-line">我的測驗結果</div>
+                <div class="share-role-name">${titleText}</div>
+                <div class="share-role-desc">${descText}</div>
+                ${isTie ? `<div style="margin-top:10px;">${winnerBadges}</div>` : ""}
+              </div>
+
+              <div class="share-reminder-box">
+                <div class="share-reminder-label">今日韌力提醒</div>
+                <div class="share-reminder-text">「${reminderText}」</div>
+              </div>
+            </div>
+
+            <div class="share-right">
+              <div>
+                <div class="share-emoji">${isTie ? "🌈" : role.emoji}</div>
+                <div class="share-tagline">
+                  ${isTie ? "你具有混合型韌力特質" : `你是：${role.youAre}`}
+                </div>
+              </div>
+
+              <div>
+                <div class="qr-box">
+                  <div id="qrcode"></div>
+                </div>
+                <div class="qr-caption">掃碼測測你的職場韌力角色</div>
+              </div>
+
+              <div class="share-footer">
+                高雄市政府 115 年員工協助方案<br>
+                本測驗僅供健康促進與自我覺察使用
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildResultData(counts, winners) {
+      const isTie = winners.length > 1;
+
+      if (isTie) {
+        return {
+          isTie: true,
+          winners,
+          role: null,
+          titleText: "混合型韌力特質",
+          descText: "你同時擁有不只一種明顯的韌力方式，代表你在不同情境下，會靈活運用不同力量讓自己重新站穩。",
+          reminderText: "我擁有多種面對壓力的力量，現在的我，已經很好。",
+          bgStyle: "linear-gradient(135deg, #fff6ef 0%, #eef8ff 45%, #eefaf4 100%)",
+          accent: "#8a94c9"
+        };
+      }
+
+      const role = roles[winners[0]];
+      return {
+        isTie: false,
+        winners,
+        role,
+        titleText: `${role.emoji} ${role.name}`,
+        descText: `${role.youAre}。${role.trait}`,
+        reminderText: role.reminder,
+        bgStyle: role.bg,
+        accent: role.accent
+      };
+    }
+
+    function renderQRCode() {
+      const qrContainer = document.getElementById("qrcode");
+      if (!qrContainer) return;
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, {
+        text: QUIZ_URL,
+        width: 140,
+        height: 140
+      });
+    }
+
     function showResult() {
       const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
 
@@ -546,6 +889,8 @@
 
       const max = Math.max(...Object.values(counts));
       const winners = Object.keys(counts).filter(key => counts[key] === max);
+      const resultData = buildResultData(counts, winners);
+      lastResultData = resultData;
 
       const scoreTable = `
         <div class="score-table">
@@ -557,17 +902,13 @@
         </div>
       `;
 
-      let title = "";
-      let description = "";
+      const title = resultData.isTie
+        ? "你具有混合型韌力特質"
+        : `你的韌力角色是：${resultData.role.emoji} ${resultData.role.name}`;
 
-      if (winners.length === 1) {
-        const r = roles[winners[0]];
-        title = `你的韌力角色是：${r.emoji} ${r.name}`;
-        description = `這是你目前最常使用的職場韌力方式。`;
-      } else {
-        title = "你具有混合型韌力特質";
-        description = "你的最高分出現並列，代表你不只一種韌力特質明顯。你可以選擇最貼近目前狀態的一張角色卡，也可以把這些力量一起帶回工作與生活中。";
-      }
+      const description = resultData.isTie
+        ? "你的最高分出現並列，代表你不只一種韌力特質明顯。你可以選擇最貼近目前狀態的一張角色卡，也可以把這些力量一起帶回工作與生活中。"
+        : "這是你目前最常使用的職場韌力方式。";
 
       const cards = winners.map(key => roleCard(key)).join("");
 
@@ -586,12 +927,94 @@
         ${scoreTable}
         ${cards}
 
+        <div class="share-panel">
+          <h3>分享我的測驗結果</h3>
+          <div>可直接下載分享圖卡，或用手機分享給同仁；圖卡中已內嵌測驗 QR Code。</div>
+
+          <div class="share-buttons">
+            <button class="share-btn" onclick="downloadShareCard()">下載分享圖卡 PNG</button>
+            <button class="share-btn" onclick="shareCard()">手機分享圖卡</button>
+            <button class="share-btn secondary" onclick="copyQuizLink()">複製測驗連結</button>
+          </div>
+
+          <div class="share-preview-wrap" id="sharePreviewWrap">
+            ${shareCardHTML(resultData)}
+          </div>
+        </div>
+
         <div class="notice">
           ※本測驗僅供健康促進活動、自我覺察及友善職場宣導使用，非心理診斷工具。若近期壓力、失眠、焦慮或低落情形持續影響生活，建議主動尋求可信任的人或專業資源協助。
         </div>
       `;
 
+      renderQRCode();
+
       result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function downloadShareCard() {
+      const node = document.getElementById("shareCard");
+      if (!node) {
+        alert("請先完成測驗並產生結果圖卡。");
+        return;
+      }
+
+      try {
+        const dataUrl = await htmlToImage.toPng(node, {
+          cacheBust: true,
+          pixelRatio: 2
+        });
+
+        const link = document.createElement("a");
+        link.download = "韌力角色分享圖卡.png";
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.error(error);
+        alert("圖卡產生失敗，請稍後再試。");
+      }
+    }
+
+    async function shareCard() {
+      const node = document.getElementById("shareCard");
+      if (!node) {
+        alert("請先完成測驗並產生結果圖卡。");
+        return;
+      }
+
+      try {
+        const dataUrl = await htmlToImage.toPng(node, {
+          cacheBust: true,
+          pixelRatio: 2
+        });
+
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], "韌力角色分享圖卡.png", { type: "image/png" });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: "你是哪一種職場韌力角色？",
+            text: "我剛完成韌力角色心理測驗，快來測測看！",
+            files: [file]
+          });
+        } else {
+          alert("此裝置或瀏覽器不支援直接分享圖卡，請改用「下載分享圖卡 PNG」。");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("分享圖卡時發生問題，請稍後再試。");
+      }
+    }
+
+    async function copyQuizLink() {
+      try {
+        await navigator.clipboard.writeText(QUIZ_URL);
+        alert("測驗連結已複製！");
+      } catch (error) {
+        console.error(error);
+        alert("無法自動複製，請手動複製此網址：\n" + QUIZ_URL);
+      }
     }
 
     function resetQuiz() {
@@ -599,10 +1022,15 @@
         input.checked = false;
       });
 
+      document.querySelectorAll(".option").forEach(el => {
+        el.classList.remove("selected");
+      });
+
       const result = document.getElementById("result");
       result.style.display = "none";
       result.innerHTML = "";
 
+      lastResultData = null;
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
