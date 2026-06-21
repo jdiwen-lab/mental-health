@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>你是哪一種職場韌力角色？</title>
+  <style>
+    :root {
+      --bg1: #fff7ec;
+      --bg2: #e8f6f3;
+      --main: #2f7f8f;
+      --main-dark: #245f6d;
+      --accent: #f2a65a;
+      --text: #443832;
+      --muted: #76685f;
+      --card: rgba(255, 255, 255, 0.92);
+      --shadow: 0 12px 34px rgba(71, 68, 61, 0.16);
+      --radius: 26px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #fff0cf 0, transparent 34%),
+        radial-gradient(circle at top right, #cbeee8 0, transparent 32%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      line-height: 1.75;
+    }
+
+    .wrap {
+      width: min(920px, calc(100% - 28px));
+      margin: 28px auto;
+    }
+
+    .hero {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: auto -90px -120px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      background: rgba(242, 166, 90, .20);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e8f6f3;
+      color: var(--main-dark);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+      color: var(--main);
+      letter-spacing: .03em;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 12px auto 0;
+      font-size: clamp(17px, 2.6vw, 22px);
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .intro {
+      margin: 20px auto 0;
+      max-width: 720px;
+      background: #fffaf3;
+      border-left: 6px solid var(--accent);
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #65584f;
+    }
+
+    .quiz {
+      margin-top: 22px;
+    }
+
+    .question {
+      background: var(--card);
+      border-radius: 22px;
+      box-shadow: 0 8px 24px rgba(71, 68, 61, 0.10);
+      padding: 22px;
+      margin: 18px 0;
+      border: 1px solid rgba(255,255,255,.75);
+    }
+
+    .q-title {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 20px;
+      font-weight: 800;
+      color: #3f4c4f;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      flex: 0 0 auto;
+      background: var(--main);
+      color: white;
+      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .option {
+      display: block;
+      background: #fffaf5;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .option:hover {
+      border-color: rgba(47, 127, 143, .35);
+      transform: translateY(-1px);
+    }
+
+    .option input {
+      margin-right: 8px;
+      transform: scale(1.12);
+    }
+
+    .option:has(input:checked) {
+      background: #e8f6f3;
+      border-color: var(--main);
+      box-shadow: 0 5px 14px rgba(47, 127, 143, .12);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: inherit;
+      transition: .18s ease;
+    }
+
+    .primary {
+      flex: 1;
+      min-width: 220px;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(242, 166, 90, .28);
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: var(--main-dark);
+      border: 2px solid #cae7e3;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+    }
+
+    .result {
+      display: none;
+      background: rgba(255,255,255,.96);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin: 22px 0 40px;
+      border: 1px solid rgba(255,255,255,.75);
+    }
+
+    .result h2 {
+      margin-top: 0;
+      color: var(--main);
+      font-size: clamp(26px, 4vw, 36px);
+      line-height: 1.3;
+    }
+
+    .complete-text {
+      background: #fff7ec;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border-left: 6px solid var(--accent);
+    }
+
+    .score-table {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .score-cell {
+      background: #f7fbfa;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-weight: 800;
+      color: #415357;
+    }
+
+    .role-card {
+      margin-top: 18px;
+      border-radius: 24px;
+      padding: 22px;
+      background: linear-gradient(135deg, #ffffff, #f8fffd);
+      border: 2px solid rgba(47, 127, 143, .16);
+      box-shadow: 0 8px 22px rgba(71, 68, 61, .10);
+    }
+
+    .role-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .emoji {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      background: #e8f6f3;
+    }
+
+    .role-card h3 {
+      margin: 0;
+      color: var(--main-dark);
+      font-size: 26px;
+      line-height: 1.3;
+    }
+
+    .role-card .you-are {
+      margin: 4px 0 0;
+      font-size: 18px;
+      color: #6b5f57;
+      font-weight: 800;
+    }
+
+    .section {
+      margin: 16px 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fffaf5;
+    }
+
+    .section strong {
+      color: var(--main-dark);
+    }
+
+    .reminder {
+      background: #e8f6f3;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 19px;
+      font-weight: 900;
+      color: var(--main-dark);
+      text-align: center;
+    }
+
+    .notice {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #756960;
+      background: #f5f1ec;
+      padding: 12px 14px;
+      border-radius: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #756960;
+      font-size: 14px;
+      margin: 28px 0 8px;
+    }
+
+    @media (max-width: 640px) {
+      .hero, .question, .result {
+        padding: 20px;
+      }
+
+      .score-table {
+        grid-template-columns: 1fr;
+      }
+
+      .q-title {
+        font-size: 18px;
+      }
+
+      .role-top {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="badge">🌊 暖洋心理韌性檢測站</div>
+      <h1>你是哪一種職場韌力角色？</h1>
+      <p class="subtitle">面對壓力時，你最常用哪種方式讓自己重新站穩？</p>
+      <div class="intro">
+        請依照你平常最自然的反應作答。每一種韌力都沒有高低之分，這份測驗是幫助你更認識自己，也看見自己面對壓力時的力量。
+      </div>
+    </section>
+
+    <section class="quiz" id="quiz"></section>
+
+    <div class="actions">
+      <button class="primary" type="button" onclick="showResult()">查看我的韌力角色</button>
+      <button class="secondary" type="button" onclick="resetQuiz()">重新作答</button>
+    </div>
+
+    <section class="result" id="result"></section>
+
+    <div class="footer">
+      ※本測驗僅供健康促進活動及自我覺察使用，非心理診斷工具。
+    </div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        title: "當臨時被交辦一件急件時，你通常會？",
+        options: {
+          A: "先穩住情緒，把事情拆成幾個步驟處理。",
+          B: "先確認目標和期限，快速找出最有效的方法。",
+          C: "先深呼吸一下，讓自己不要被壓力捲走。",
+          D: "找可以討論的人，一起釐清怎麼做比較好。",
+          E: "先感受一下自己的狀態，再提醒自己慢慢來也可以。"
+        }
+      },
+      {
+        title: "如果最近工作讓你覺得很累，你最可能怎麼恢復？",
+        options: {
+          A: "找一個安靜的時間，讓自己慢慢沉澱。",
+          B: "列出待辦事項，完成一件就比較安心。",
+          C: "換個環境、走一走，讓心情流動一下。",
+          D: "跟信任的人聊聊，獲得支持就會比較有力氣。",
+          E: "寫下自己的感受，弄清楚自己到底怎麼了。"
+        }
+      },
+      {
+        title: "同仁心情低落時，你比較可能怎麼做？",
+        options: {
+          A: "陪他待一下，讓他知道有人在。",
+          B: "幫他一起想解決方法或可用資源。",
+          C: "用輕鬆一點的方式轉換氣氛。",
+          D: "主動關心，問他需要什麼協助。",
+          E: "先聽他說，不急著給建議。"
+        }
+      },
+      {
+        title: "你覺得讓自己撐過困難的力量，通常來自哪裡？",
+        options: {
+          A: "內在的穩定感。",
+          B: "清楚的方向和方法。",
+          C: "保持彈性，不讓自己卡住。",
+          D: "身邊有人願意一起面對。",
+          E: "對自己情緒的理解和接納。"
+        }
+      },
+      {
+        title: "面對職場中的不同意見或衝突，你通常會？",
+        options: {
+          A: "先讓氣氛降溫，再慢慢溝通。",
+          B: "回到事實和目標，找出可行方案。",
+          C: "換個角度想，也許事情沒有那麼絕對。",
+          D: "試著理解雙方立場，讓彼此都能被聽見。",
+          E: "留意自己和對方的感受，避免說出傷人的話。"
+        }
+      }
+    ];
+
+    const roles = {
+      A: {
+        emoji: "⚓",
+        name: "港灣型",
+        youAre: "讓人安心的穩定力量",
+        trait: "你擅長在混亂中讓自己慢下來，也能讓身邊的人感到安心。面對壓力時，你不一定急著往前衝，而是會先讓情緒沉澱、讓狀態穩住。",
+        source: "穩定、包容、沉著、陪伴。",
+        pressure: "你常常接住別人的情緒，卻忘了自己也需要被接住。",
+        reminder: "我可以照顧別人，也可以先照顧自己。",
+        action: "當同仁遇到困難時，先給予傾聽與陪伴；但也記得尊重自己的界線，不把所有責任都扛在身上。"
+      },
+      B: {
+        emoji: "🗼",
+        name: "燈塔型",
+        youAre: "在困難中找方向的人",
+        trait: "你擅長整理資訊、確認目標，並在壓力中找出可行方法。當大家慌亂時，你常能提供方向感，協助團隊重新聚焦。",
+        source: "清楚、理性、目標感、行動力。",
+        pressure: "你可能會習慣把「解決問題」放在第一位，忽略自己的疲累與情緒。",
+        reminder: "不是每件事都要立刻解決，我也可以先休息一下。",
+        action: "在協助同仁找方法前，先問一句：「你現在比較需要我聽你說，還是一起想辦法？」"
+      },
+      C: {
+        emoji: "🍃",
+        name: "海風型",
+        youAre: "懂得轉彎與調節的彈性力量",
+        trait: "你面對壓力時，不容易被單一情緒困住，常能透過轉換環境、調整步調或換個角度，讓自己重新流動起來。",
+        source: "彈性、轉換、幽默感、適應力。",
+        pressure: "你可能看起來很輕鬆，但有時只是把壓力先放到一旁，沒有真正處理。",
+        reminder: "換個呼吸不是逃避，是讓自己重新有力量。",
+        action: "在忙碌或緊繃時，主動創造一點喘息空間，例如提醒同仁休息、喝水、伸展，讓團隊不只追求效率，也保有修復。"
+      },
+      D: {
+        emoji: "🪸",
+        name: "珊瑚型",
+        youAre: "讓支持網慢慢長出來的人",
+        trait: "你重視關係與連結，擅長讓人感覺被理解、被支持。你相信困難不一定要一個人面對，能夠透過合作與互助慢慢累積力量。",
+        source: "連結、合作、同理、互助。",
+        pressure: "你在乎別人的感受，有時會過度顧慮他人，反而壓抑自己的需求。",
+        reminder: "我可以支持別人，也可以把自己的需要說出來。",
+        action: "尊重每個人不同的工作節奏、家庭照顧責任、身心狀態與表達方式，讓職場成為可以安心說出需求的地方。"
+      },
+      E: {
+        emoji: "🌊",
+        name: "浪花型",
+        youAre: "敏銳感受與自我覺察的力量",
+        trait: "你對情緒、氣氛和細節很敏銳，能察覺自己或他人狀態的變化。你不一定大聲表達，但內在其實有很細緻的理解力。",
+        source: "覺察、感受、溫柔、理解。",
+        pressure: "你可能容易受環境影響，或把別人的情緒放進心裡，讓自己變得疲累。",
+        reminder: "我的感受不是脆弱，而是提醒我需要好好照顧自己。",
+        action: "不隨意評論他人的情緒、外貌、身心狀態或性別氣質；在回應同仁前，先多一點理解、少一點標籤。"
+      }
+    };
+
+    function renderQuiz() {
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = questions.map((q, index) => {
+        const optionHtml = Object.entries(q.options).map(([key, text]) => {
+          return `
+            <label class="option">
+              <input type="radio" name="q${index}" value="${key}">
+              <strong>${key}.</strong> ${text}
+            </label>
+          `;
+        }).join("");
+
+        return `
+          <article class="question">
+            <div class="q-title">
+              <div class="q-num">${index + 1}</div>
+              <div>${q.title}</div>
+            </div>
+            ${optionHtml}
+          </article>
+        `;
+      }).join("");
+    }
+
+    function roleCard(key) {
+      const r = roles[key];
+      return `
+        <article class="role-card">
+          <div class="role-top">
+            <div class="emoji">${r.emoji}</div>
+            <div>
+              <h3>角色卡｜${r.name}</h3>
+              <p class="you-are">你是：${r.youAre}</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <strong>角色特質</strong><br>
+            ${r.trait}
+          </div>
+
+          <div class="section">
+            <strong>你的韌力來源</strong><br>
+            ${r.source}
+          </div>
+
+          <div class="section">
+            <strong>容易遇到的壓力</strong><br>
+            ${r.pressure}
+          </div>
+
+          <div class="reminder">
+            今日韌力提醒<br>
+            「${r.reminder}」
+          </div>
+
+          <div class="section">
+            <strong>友善職場行動</strong><br>
+            ${r.action}
+          </div>
+        </article>
+      `;
+    }
+
+    function showResult() {
+      const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+
+      for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) {
+          alert(`第 ${i + 1} 題還沒有作答喔！請完成所有題目後再查看結果。`);
+          return;
+        }
+        counts[selected.value]++;
+      }
+
+      const max = Math.max(...Object.values(counts));
+      const winners = Object.keys(counts).filter(key => counts[key] === max);
+
+      const scoreTable = `
+        <div class="score-table">
+          <div class="score-cell">A 港灣型<br>${counts.A} 次</div>
+          <div class="score-cell">B 燈塔型<br>${counts.B} 次</div>
+          <div class="score-cell">C 海風型<br>${counts.C} 次</div>
+          <div class="score-cell">D 珊瑚型<br>${counts.D} 次</div>
+          <div class="score-cell">E 浪花型<br>${counts.E} 次</div>
+        </div>
+      `;
+
+      let title = "";
+      let description = "";
+
+      if (winners.length === 1) {
+        const r = roles[winners[0]];
+        title = `你的韌力角色是：${r.emoji} ${r.name}`;
+        description = `這是你目前最常使用的職場韌力方式。`;
+      } else {
+        title = "你具有混合型韌力特質";
+        description = "你的最高分出現並列，代表你不只一種韌力特質明顯。你可以選擇最貼近目前狀態的一張角色卡，也可以把這些力量一起帶回工作與生活中。";
+      }
+
+      const cards = winners.map(key => roleCard(key)).join("");
+
+      const result = document.getElementById("result");
+      result.style.display = "block";
+      result.innerHTML = `
+        <h2>${title}</h2>
+
+        <div class="complete-text">
+          <strong>恭喜你完成「韌力角色心理測驗」！</strong><br>
+          每一種韌力都沒有高低之分。<br>
+          有些人像港灣，讓人安心；有些人像燈塔，帶來方向；有些人像海風，懂得轉換；有些人像珊瑚，建立支持；有些人像浪花，敏銳覺察。
+        </div>
+
+        <p>${description}</p>
+        ${scoreTable}
+        ${cards}
+
+        <div class="notice">
+          ※本測驗僅供健康促進活動、自我覺察及友善職場宣導使用，非心理診斷工具。若近期壓力、失眠、焦慮或低落情形持續影響生活，建議主動尋求可信任的人或專業資源協助。
+        </div>
+      `;
+
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll("input[type='radio']").forEach(input => {
+        input.checked = false;
+      });
+
+      const result = document.getElementById("result");
+      result.style.display = "none";
+      result.innerHTML = "";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
