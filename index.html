@@ -19,11 +19,13 @@
       --radius: 24px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
       color: var(--text);
       background:
         radial-gradient(circle at top left, #fff0cf 0, transparent 34%),
@@ -70,6 +72,8 @@
       font-weight: 800;
       font-size: 14px;
       margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -77,6 +81,8 @@
       font-size: clamp(30px, 5vw, 48px);
       color: var(--main);
       line-height: 1.25;
+      position: relative;
+      z-index: 1;
     }
 
     .subtitle {
@@ -84,6 +90,8 @@
       max-width: 760px;
       color: var(--muted);
       font-size: clamp(17px, 2.6vw, 22px);
+      position: relative;
+      z-index: 1;
     }
 
     .intro {
@@ -95,6 +103,8 @@
       padding: 14px 16px;
       border-radius: 16px;
       color: #64574f;
+      position: relative;
+      z-index: 1;
     }
 
     .quiz {
@@ -322,7 +332,7 @@
       color: #fff;
     }
 
-    .share-btn.secondary {
+    .share-btn-light {
       background: #fff;
       color: var(--main-dark);
       border: 2px solid #cae7e3;
@@ -331,10 +341,9 @@
     .share-preview-wrap {
       margin-top: 18px;
       overflow-x: auto;
-      padding-bottom: 6px;
+      padding: 10px 0 6px;
     }
 
-    /* 分享圖卡 */
     .share-card {
       width: 820px;
       min-height: 430px;
@@ -386,6 +395,7 @@
 
     .share-top-badge {
       display: inline-block;
+      width: fit-content;
       padding: 6px 14px;
       border-radius: 999px;
       background: rgba(255,255,255,.78);
@@ -476,6 +486,7 @@
       font-weight: 800;
       color: #5f554d;
       line-height: 1.7;
+      margin-top: 8px;
     }
 
     .qr-box {
@@ -528,8 +539,7 @@
 
     @media (max-width: 860px) {
       .share-card {
-        width: 100%;
-        min-width: 760px;
+        width: 820px;
       }
     }
 
@@ -556,6 +566,7 @@
     }
   </style>
 </head>
+
 <body>
   <main class="wrap">
     <section class="hero">
@@ -570,8 +581,8 @@
     <section class="quiz" id="quiz"></section>
 
     <div class="actions">
-      <button class="primary" type="button" onclick="showResult()">查看我的韌力角色</button>
-      <button class="secondary" type="button" onclick="resetQuiz()">重新作答</button>
+      <button class="primary" type="button" id="showResultBtn">查看我的韌力角色</button>
+      <button class="secondary" type="button" id="resetBtn">重新作答</button>
     </div>
 
     <section class="result" id="result"></section>
@@ -585,7 +596,6 @@
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
 
   <script>
-    // 請改成你的實際測驗網址
     const QUIZ_URL = "https://mental-health-9ih.pages.dev/?utm_source=sharecard";
 
     const questions = [
@@ -643,7 +653,6 @@
 
     const roles = {
       A: {
-        key: "A",
         emoji: "⚓",
         name: "港灣型",
         youAre: "讓人安心的穩定力量",
@@ -656,7 +665,6 @@
         accent: "#d8a25f"
       },
       B: {
-        key: "B",
         emoji: "🗼",
         name: "燈塔型",
         youAre: "在困難中找方向的人",
@@ -669,7 +677,6 @@
         accent: "#6e8fb4"
       },
       C: {
-        key: "C",
         emoji: "🍃",
         name: "海風型",
         youAre: "懂得轉彎與調節的彈性力量",
@@ -682,7 +689,6 @@
         accent: "#71ae8a"
       },
       D: {
-        key: "D",
         emoji: "🪸",
         name: "珊瑚型",
         youAre: "讓支持網慢慢長出來的人",
@@ -695,7 +701,6 @@
         accent: "#d67b78"
       },
       E: {
-        key: "E",
         emoji: "🌊",
         name: "浪花型",
         youAre: "敏銳感受與自我覺察的力量",
@@ -709,15 +714,24 @@
       }
     };
 
-    let lastResultData = null;
+    function initPage() {
+      renderQuiz();
+
+      document.getElementById("showResultBtn").addEventListener("click", showResult);
+      document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    }
 
     function renderQuiz() {
       const quiz = document.getElementById("quiz");
-      quiz.innerHTML = questions.map((q, index) => {
-        const optionHtml = Object.entries(q.options).map(([key, text]) => {
+
+      quiz.innerHTML = questions.map(function(q, index) {
+        const optionHtml = Object.entries(q.options).map(function(entry) {
+          const key = entry[0];
+          const text = entry[1];
+
           return `
             <label class="option">
-              <input type="radio" name="q${index}" value="${key}" onchange="markSelected(this)">
+              <input type="radio" name="q${index}" value="${key}">
               <strong>${key}.</strong> ${text}
             </label>
           `;
@@ -733,16 +747,21 @@
           </article>
         `;
       }).join("");
-    }
 
-    function markSelected(input) {
-      const labels = document.querySelectorAll(`input[name="${input.name}"]`);
-      labels.forEach(el => el.closest('.option').classList.remove('selected'));
-      input.closest('.option').classList.add('selected');
+      document.querySelectorAll(".option input").forEach(function(input) {
+        input.addEventListener("change", function() {
+          const sameNameInputs = document.querySelectorAll(`input[name="${input.name}"]`);
+          sameNameInputs.forEach(function(el) {
+            el.closest(".option").classList.remove("selected");
+          });
+          input.closest(".option").classList.add("selected");
+        });
+      });
     }
 
     function roleCard(key) {
       const r = roles[key];
+
       return `
         <article class="role-card">
           <div class="role-top">
@@ -781,40 +800,68 @@
       `;
     }
 
-    function shareCardHTML(data) {
-      const { isTie, winners, role, titleText, descText, reminderText, bgStyle, accent } = data;
+    function buildResultData(winners) {
+      const isTie = winners.length > 1;
 
-      const winnerBadges = winners.map(k => {
+      if (isTie) {
+        return {
+          isTie: true,
+          winners: winners,
+          role: null,
+          titleText: "🌈 混合型韌力特質",
+          descText: "你同時擁有不只一種明顯的韌力方式，代表你在不同情境下，會靈活運用不同力量讓自己重新站穩。",
+          reminderText: "我擁有多種面對壓力的力量，現在的我，已經很好。",
+          bgStyle: "linear-gradient(135deg, #fff6ef 0%, #eef8ff 45%, #eefaf4 100%)",
+          accent: "#8a94c9"
+        };
+      }
+
+      const role = roles[winners[0]];
+
+      return {
+        isTie: false,
+        winners: winners,
+        role: role,
+        titleText: `${role.emoji} ${role.name}`,
+        descText: `${role.youAre}。${role.trait}`,
+        reminderText: role.reminder,
+        bgStyle: role.bg,
+        accent: role.accent
+      };
+    }
+
+    function shareCardHTML(data) {
+      const winnerBadges = data.winners.map(function(k) {
         const w = roles[k];
         return `<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);padding:6px 10px;border-radius:999px;font-size:14px;font-weight:800;margin:4px 4px 0 0;">${w.emoji} ${w.name}</span>`;
       }).join("");
 
       return `
-        <div id="shareCard" class="share-card" style="background:${bgStyle};">
+        <div id="shareCard" class="share-card" style="background:${data.bgStyle};">
           <div class="share-card-inner">
             <div class="share-left">
               <div class="share-top-badge">暖洋心理韌性檢測站</div>
               <div class="share-title">你是哪一種職場韌力角色？</div>
               <div class="share-subtitle">面對壓力時，你最常用哪種方式讓自己重新站穩？</div>
 
-              <div class="share-role-box" style="box-shadow: inset 0 0 0 2px ${accent}22;">
+              <div class="share-role-box" style="box-shadow: inset 0 0 0 2px ${data.accent}22;">
                 <div class="share-role-line">我的測驗結果</div>
-                <div class="share-role-name">${titleText}</div>
-                <div class="share-role-desc">${descText}</div>
-                ${isTie ? `<div style="margin-top:10px;">${winnerBadges}</div>` : ""}
+                <div class="share-role-name">${data.titleText}</div>
+                <div class="share-role-desc">${data.descText}</div>
+                ${data.isTie ? `<div style="margin-top:10px;">${winnerBadges}</div>` : ""}
               </div>
 
               <div class="share-reminder-box">
                 <div class="share-reminder-label">今日韌力提醒</div>
-                <div class="share-reminder-text">「${reminderText}」</div>
+                <div class="share-reminder-text">「${data.reminderText}」</div>
               </div>
             </div>
 
             <div class="share-right">
               <div>
-                <div class="share-emoji">${isTie ? "🌈" : role.emoji}</div>
+                <div class="share-emoji">${data.isTie ? "🌈" : data.role.emoji}</div>
                 <div class="share-tagline">
-                  ${isTie ? "你具有混合型韌力特質" : `你是：${role.youAre}`}
+                  ${data.isTie ? "你具有混合型韌力特質" : `你是：${data.role.youAre}`}
                 </div>
               </div>
 
@@ -835,39 +882,17 @@
       `;
     }
 
-    function buildResultData(counts, winners) {
-      const isTie = winners.length > 1;
-
-      if (isTie) {
-        return {
-          isTie: true,
-          winners,
-          role: null,
-          titleText: "混合型韌力特質",
-          descText: "你同時擁有不只一種明顯的韌力方式，代表你在不同情境下，會靈活運用不同力量讓自己重新站穩。",
-          reminderText: "我擁有多種面對壓力的力量，現在的我，已經很好。",
-          bgStyle: "linear-gradient(135deg, #fff6ef 0%, #eef8ff 45%, #eefaf4 100%)",
-          accent: "#8a94c9"
-        };
-      }
-
-      const role = roles[winners[0]];
-      return {
-        isTie: false,
-        winners,
-        role,
-        titleText: `${role.emoji} ${role.name}`,
-        descText: `${role.youAre}。${role.trait}`,
-        reminderText: role.reminder,
-        bgStyle: role.bg,
-        accent: role.accent
-      };
-    }
-
     function renderQRCode() {
       const qrContainer = document.getElementById("qrcode");
       if (!qrContainer) return;
+
       qrContainer.innerHTML = "";
+
+      if (typeof QRCode === "undefined") {
+        qrContainer.innerHTML = "<div style='font-size:12px;'>QR Code 載入失敗</div>";
+        return;
+      }
+
       new QRCode(qrContainer, {
         text: QUIZ_URL,
         width: 140,
@@ -880,17 +905,21 @@
 
       for (let i = 0; i < questions.length; i++) {
         const selected = document.querySelector(`input[name="q${i}"]:checked`);
+
         if (!selected) {
           alert(`第 ${i + 1} 題還沒有作答喔！請完成所有題目後再查看結果。`);
           return;
         }
+
         counts[selected.value]++;
       }
 
-      const max = Math.max(...Object.values(counts));
-      const winners = Object.keys(counts).filter(key => counts[key] === max);
-      const resultData = buildResultData(counts, winners);
-      lastResultData = resultData;
+      const max = Math.max(counts.A, counts.B, counts.C, counts.D, counts.E);
+      const winners = Object.keys(counts).filter(function(key) {
+        return counts[key] === max;
+      });
+
+      const resultData = buildResultData(winners);
 
       const scoreTable = `
         <div class="score-table">
@@ -902,7 +931,7 @@
         </div>
       `;
 
-      const title = resultData.isTie
+      const pageTitle = resultData.isTie
         ? "你具有混合型韌力特質"
         : `你的韌力角色是：${resultData.role.emoji} ${resultData.role.name}`;
 
@@ -910,12 +939,15 @@
         ? "你的最高分出現並列，代表你不只一種韌力特質明顯。你可以選擇最貼近目前狀態的一張角色卡，也可以把這些力量一起帶回工作與生活中。"
         : "這是你目前最常使用的職場韌力方式。";
 
-      const cards = winners.map(key => roleCard(key)).join("");
+      const cards = winners.map(function(key) {
+        return roleCard(key);
+      }).join("");
 
       const result = document.getElementById("result");
       result.style.display = "block";
+
       result.innerHTML = `
-        <h2>${title}</h2>
+        <h2>${pageTitle}</h2>
 
         <div class="complete-text">
           <strong>恭喜你完成「韌力角色心理測驗」！</strong><br>
@@ -932,12 +964,12 @@
           <div>可直接下載分享圖卡，或用手機分享給同仁；圖卡中已內嵌測驗 QR Code。</div>
 
           <div class="share-buttons">
-            <button class="share-btn" onclick="downloadShareCard()">下載分享圖卡 PNG</button>
-            <button class="share-btn" onclick="shareCard()">手機分享圖卡</button>
-            <button class="share-btn secondary" onclick="copyQuizLink()">複製測驗連結</button>
+            <button class="share-btn" type="button" id="downloadCardBtn">下載分享圖卡 PNG</button>
+            <button class="share-btn" type="button" id="shareCardBtn">手機分享圖卡</button>
+            <button class="share-btn-light" type="button" id="copyLinkBtn">複製測驗連結</button>
           </div>
 
-          <div class="share-preview-wrap" id="sharePreviewWrap">
+          <div class="share-preview-wrap">
             ${shareCardHTML(resultData)}
           </div>
         </div>
@@ -949,20 +981,31 @@
 
       renderQRCode();
 
+      document.getElementById("downloadCardBtn").addEventListener("click", downloadShareCard);
+      document.getElementById("shareCardBtn").addEventListener("click", shareCard);
+      document.getElementById("copyLinkBtn").addEventListener("click", copyQuizLink);
+
       result.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     async function downloadShareCard() {
       const node = document.getElementById("shareCard");
+
       if (!node) {
         alert("請先完成測驗並產生結果圖卡。");
+        return;
+      }
+
+      if (typeof htmlToImage === "undefined") {
+        alert("圖卡下載功能尚未載入成功，請重新整理頁面後再試。");
         return;
       }
 
       try {
         const dataUrl = await htmlToImage.toPng(node, {
           cacheBust: true,
-          pixelRatio: 2
+          pixelRatio: 2,
+          backgroundColor: "#fffaf3"
         });
 
         const link = document.createElement("a");
@@ -977,15 +1020,22 @@
 
     async function shareCard() {
       const node = document.getElementById("shareCard");
+
       if (!node) {
         alert("請先完成測驗並產生結果圖卡。");
+        return;
+      }
+
+      if (typeof htmlToImage === "undefined") {
+        alert("圖卡分享功能尚未載入成功，請重新整理頁面後再試。");
         return;
       }
 
       try {
         const dataUrl = await htmlToImage.toPng(node, {
           cacheBust: true,
-          pixelRatio: 2
+          pixelRatio: 2,
+          backgroundColor: "#fffaf3"
         });
 
         const response = await fetch(dataUrl);
@@ -1012,17 +1062,16 @@
         await navigator.clipboard.writeText(QUIZ_URL);
         alert("測驗連結已複製！");
       } catch (error) {
-        console.error(error);
         alert("無法自動複製，請手動複製此網址：\n" + QUIZ_URL);
       }
     }
 
     function resetQuiz() {
-      document.querySelectorAll("input[type='radio']").forEach(input => {
+      document.querySelectorAll("input[type='radio']").forEach(function(input) {
         input.checked = false;
       });
 
-      document.querySelectorAll(".option").forEach(el => {
+      document.querySelectorAll(".option").forEach(function(el) {
         el.classList.remove("selected");
       });
 
@@ -1030,11 +1079,14 @@
       result.style.display = "none";
       result.innerHTML = "";
 
-      lastResultData = null;
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    renderQuiz();
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initPage);
+    } else {
+      initPage();
+    }
   </script>
 </body>
 </html>
